@@ -1,5 +1,4 @@
 FROM docker.io/archlinux/base:latest
-MAINTAINER Erazem Kokot <contact at erazem dot eu>
 
 ENV NAME=arch-toolbox VERSION=rolling
 LABEL com.github.containers.toolbox="true" \
@@ -8,16 +7,14 @@ LABEL com.github.containers.toolbox="true" \
       version="$VERSION" \
       usage="This image is meant to be used with the toolbox command" \
       summary="Base image for creating Arch toolbox containers" \
-      maintainer="Erazem Kokot <contact at erazem dot eu>"
-
-RUN pacman -Syu --noconfirm
+      maintainer="Emanuele Palazzetti <emanuele.palazzetti@gmail.com>"
 
 # Install packages from the extra-packages file
+# and complete the clean up of local caches
 COPY extra-packages /
-RUN pacman -Sy --noconfirm $(<extra-packages)
-RUN rm /extra-packages
+RUN pacman -Syu --noconfirm && \
+  pacman -Sy --noconfirm $(<extra-packages) && \
+  rm /extra-packages && \
+  pacman -Scc --noconfirm
 
-# Clean up all local caches
-RUN pacman -Scc --noconfirm
-
-CMD /bin/sh
+CMD /bin/bash
