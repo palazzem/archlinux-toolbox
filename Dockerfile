@@ -10,7 +10,7 @@ LABEL com.github.containers.toolbox="true" \
       maintainer="Emanuele Palazzetti <emanuele.palazzetti@gmail.com>"
 
 # Install required dependencies to run `toolbox`
-RUN pacman -Sy sudo --noconfirm && \
+RUN pacman -Sy sudo git --noconfirm && \
   pacman -Scc --noconfirm
 
 # Required steps otherwise `toolbox` fails to start the container:
