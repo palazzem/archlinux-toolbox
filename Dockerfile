@@ -1,23 +1,22 @@
 FROM docker.io/archlinux/base:latest
-MAINTAINER Erazem Kokot <contact at erazem dot eu>
 
 ENV NAME=arch-toolbox VERSION=rolling
 LABEL com.github.containers.toolbox="true" \
       com.github.debarshiray.toolbox="true" \
-      name="$FCG/$NAME" \
+      name="$NAME" \
       version="$VERSION" \
       usage="This image is meant to be used with the toolbox command" \
       summary="Base image for creating Arch toolbox containers" \
-      maintainer="Erazem Kokot <contact at erazem dot eu>"
+      maintainer="Emanuele Palazzetti <emanuele.palazzetti@gmail.com>"
 
-RUN pacman -Syu --noconfirm
+# Install required dependencies to run `toolbox`
+RUN pacman -Sy sudo --noconfirm && \
+  pacman -Scc --noconfirm
 
-# Install packages from the extra-packages file
-COPY extra-packages /
-RUN pacman -Sy --noconfirm $(<extra-packages)
-RUN rm /extra-packages
+# Required steps otherwise `toolbox` fails to start the container:
+# 1. machine-id must be present in the base image
+# 2. $(whoami) must be in the sudoer list without password
+RUN touch /etc/machine-id
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toolbox
 
-# Clean up all local caches
-RUN pacman -Scc --noconfirm
-
-CMD /bin/sh
+CMD /bin/bash
