@@ -16,7 +16,9 @@ RUN pacman -Sy sudo git --noconfirm && \
 # Required steps otherwise `toolbox` fails to start the container:
 # 1. machine-id must be present in the base image
 # 2. $(whoami) must be in the sudoer list without password
-RUN touch /etc/machine-id
-RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toolbox
+# 3. /media must be present (toolbox tries to remove the folder and create a symlink)
+RUN touch /etc/machine-id && \
+  echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toolbox && \
+  mkdir /media
 
 CMD /bin/bash
