@@ -1,4 +1,4 @@
-FROM docker.io/archlinux/base:latest
+FROM docker.io/archlinux:latest
 
 ENV NAME=arch-toolbox VERSION=rolling
 LABEL com.github.containers.toolbox="true" \
