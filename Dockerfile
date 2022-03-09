@@ -21,4 +21,8 @@ RUN touch /etc/machine-id && \
   echo "%wheel ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toolbox && \
   mkdir /media
 
+# Toolbox doesn't set correctly $PROMPT_COMMAND
+# This step unset the variable if it's composed only by white spaces
+RUN sed -i '/PS1/a \\n# Clean \$PROMPT_COMMAND not correctly set by Toolbox\n\[\[ \-z \"\$\{PROMPT_COMMAND// \}\" \]\] && unset PROMPT_COMMAND' /etc/bash.bashrc
+
 CMD /bin/bash
